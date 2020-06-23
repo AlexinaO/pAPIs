@@ -9,9 +9,10 @@ const { request } = require("chai");
  * (2) Store book
  * (3) Get all books
  * (4) Get single book
- * (5) Update book
- * (6) Delete book
- * (7) Recherche par titre
+ * (5) Recherche par titre
+ * (6) Update book
+ * (7) Delete book
+ 
  */
 
 describe("Book", () => {
@@ -120,6 +121,24 @@ describe("Book", () => {
 		});
 	});
 
+		/*
+	* Test the /GET/:title route
+	*/
+	describe("/GET/:title book", () => {
+		it("it should GET the books", (done) => {
+			chai.request(server)
+				.get("/api/book/title/"+testData.title)
+				.set("Authorization", "Bearer "+ userTestData.token)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property("message").eql("Operation success");
+					done();
+				});
+
+		});
+
+	});
+
 	/*
   * Test the /PUT/:id route
   */
@@ -152,21 +171,5 @@ describe("Book", () => {
 				});
 		});
 	});
-	/*
-  * Test the /GET/:title route
-  */
-	describe("/GET/:title book", () => {
-		it("it should GET the books", (done) => {
-			chai.request(server)
-				.get("/api/book/"+testData.title)
-				.set("Authorization", "Bearer "+ userTestData.token)
-				.end((err, res) => {
-					res.should.have.status(200);
-					res.body.should.have.property("message").eql("Operation success");
-					done();
-				});
 
-		});
-
-	});
 });
