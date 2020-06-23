@@ -1,0 +1,23 @@
+name: Docker Compose Actions Workflow
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    # env:
+    #   JWT_SECRET: ${{ secrets.JWT_SECRET }}
+    #   EMAIL_SMTP_HOST: in-v3.mailjet.com
+    #   EMAIL_SMTP_PORT: 587
+    #   EMAIL_SMTP_USERNAME: ${{ secrets.EMAIL_SMTP_USERNAME }}
+    #   EMAIL_SMTP_PASSWORD: ${{ secrets.EMAIL_SMTP_PASSWORD }}
+    #   EMAIL_SMTP_SECURE: true
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the stack and run tests
+        env:
+          EMAIL_SMTP_USERNAME: ${{ secrets.EMAIL_SMTP_USERNAME }}
+          EMAIL_SMTP_PASSWORD: ${{ secrets.EMAIL_SMTP_PASSWORD }}
+        run: docker-compose up --exit-code-from web
