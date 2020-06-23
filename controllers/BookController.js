@@ -1,7 +1,8 @@
 const Book = require("../models/BookModel");
 const { body,validationResult } = require("express-validator");
 const { sanitizeBody } = require("express-validator");
-const apiResponse = require("../helpers/apiResponse");
+const controller = require("../helpers/controller");
+// const apiResponse = require("../helpers/apiResponse");
 const auth = require("../middlewares/jwt");
 var mongoose = require("mongoose");
 mongoose.set("useFindAndModify", false);
@@ -22,21 +23,23 @@ function BookData(data) {
  */
 exports.bookList = [
 	auth,
-	function (req, res) {
-		try {
-			Book.find({user: req.user._id},"_id title description isbn createdAt").then((books)=>{
-				if(books.length > 0){
-					return apiResponse.successResponseWithData(res, "Operation success", books);
-				}else{
-					return apiResponse.successResponseWithData(res, "Operation success", []);
-				}
-			});
-		} catch (err) {
-			//throw error in json response with status 500. 
-			return apiResponse.ErrorResponse(res, err);
-		}
-	}
+	(req, res)=>{ controller.Liste(req, res, Book); }
 ];
+// function (req, res) {
+// 	try {
+// 		Book.find({user: req.user._id},"_id title description isbn createdAt").then((books)=>{
+// 			if(books.length > 0){
+// 				return apiResponse.successResponseWithData(res, "Operation success", books);
+// 			}else{
+// 				return apiResponse.successResponseWithData(res, "Operation success", []);
+// 			}
+// 		});
+// 	} catch (err) {
+// 		//throw error in json response with status 500. 
+// 		return apiResponse.ErrorResponse(res, err);
+// 	}
+// }
+// ];
 
 /**
  * Book Detail.
@@ -95,7 +98,9 @@ exports.bookStore = [
 				{ title: req.body.title,
 					user: req.user,
 					description: req.body.description,
-					isbn: req.body.isbn
+					isbn: req.body.isbn,
+					author: req.body.author,
+					year: req.body.year
 				});
 
 			if (!errors.isEmpty()) {
@@ -122,6 +127,8 @@ exports.bookStore = [
  * @param {string}      title 
  * @param {string}      description
  * @param {string}      isbn
+ * @param {string}      author
+ * @param {string}      year
  * 
  * @returns {Object}
  */
@@ -144,6 +151,8 @@ exports.bookUpdate = [
 				{ title: req.body.title,
 					description: req.body.description,
 					isbn: req.body.isbn,
+					author: req.body.author,
+					year: req.body.year,
 					_id:req.params.id
 				});
 
@@ -214,6 +223,34 @@ exports.bookDelete = [
 							}
 						});
 					}
+				}
+			});
+		} catch (err) {
+			//throw error in json response with status 500. 
+			return apiResponse.ErrorResponse(res, err);
+		}
+	}
+];
+/**
+ * Book Title.
+ * 
+ * @param {string}      title
+ * 
+ * @returns {Object}
+ */
+exports.bookTitle = [
+	auth,
+	function (req, res) {
+		if(!mongoose.Types.ObjectId.isValid(req.params.title)){
+			return apiResponse.successResponseWithData(res, "Operation success", {});
+		}
+		try {
+			Book.findOne({title:req.params.title}).then((book)=>{                
+				if(book !== null){
+					let bookData = new BookData(book);
+					return apiResponse.successResponseWithData(res, "Operation success", bookData);
+				}else{
+					return apiResponse.notFoundResponse(res, "not found");
 				}
 			});
 		} catch (err) {

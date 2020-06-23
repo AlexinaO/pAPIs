@@ -1,5 +1,6 @@
 const { chai, server, should } = require("./testConfig");
 const BookModel = require("../models/BookModel");
+const { request } = require("chai");
 
 /**
  * Test cases to test all the book APIs
@@ -10,6 +11,7 @@ const BookModel = require("../models/BookModel");
  * (4) Get single book
  * (5) Update book
  * (6) Delete book
+ * (7) Recherche par titre
  */
 
 describe("Book", () => {
@@ -30,7 +32,9 @@ describe("Book", () => {
 	const testData = {
 		"title":"testing book",
 		"description":"testing book desc",
-		"isbn":"3214htrff4"
+		"isbn":"3214htrff4",
+		"author" : "titou les pouces vert",
+		"year" : new Date('1991-03-31')
 	};
 
 	/*
@@ -147,5 +151,22 @@ describe("Book", () => {
 					done();
 				});
 		});
+	});
+	/*
+  * Test the /GET/:title route
+  */
+	describe("/GET/:title book", () => {
+		it("it should GET the books", (done) => {
+			chai.request(server)
+				.get("/api/book/"+testData.title)
+				.set("Authorization", "Bearer "+ userTestData.token)
+				.end((err, res) => {
+					res.should.have.status(200);
+					res.body.should.have.property("message").eql("Operation success");
+					done();
+				});
+
+		});
+
 	});
 });
