@@ -29,7 +29,11 @@ var app = express();
 
 //don't show the log when it is test
 if(process.env.NODE_ENV !== "test") {
+	const swaggerUi = require('swagger-ui-express');
+	const swaggerDocument = require('./swagger.json');
+
 	app.use(logger("dev"));
+	app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 }
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
