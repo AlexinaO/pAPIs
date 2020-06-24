@@ -19,6 +19,8 @@ module.exports = {
     'no-underscore-dangle': ['off'],
     'consistent-return': ['warn'],
     'prefer-promise-reject-errors': ['warn'],
-    'semi': ["error", "never"],
+    'semi': ['error', 'never'],
+    'no-tabs': ['warn'],
+    'quote-props': ['warn'],
   },
-};
+}
