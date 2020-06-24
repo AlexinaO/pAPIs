@@ -10,6 +10,7 @@ process.env.EMAIL_SMTP_PORT = 587
 process.env.EMAIL_SMTP_SECURE = true
 
 // Require the dev-dependencies
+const faker = require('faker')
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 const server = require('../app')
@@ -22,4 +23,5 @@ module.exports = {
   chai,
   server,
   should,
+  faker,
 }
