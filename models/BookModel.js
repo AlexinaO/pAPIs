@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const mongoosePaginate = require('mongoose-paginate')
 
 const { Schema } = mongoose
 
@@ -9,6 +10,6 @@ const BookSchema = new Schema({
   user: { type: Schema.ObjectId, ref: 'User', required: false },
   author: { type: String, required: true },
   year: { type: Date, required: true },
-}, { timestamps: true })
+}, { timestamps: true }).plugin(mongoosePaginate)
 
 module.exports = mongoose.model('Book', BookSchema)

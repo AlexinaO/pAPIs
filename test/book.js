@@ -1,7 +1,10 @@
+/* eslint-disable import/order */
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 const { chai, server, faker } = require('./testConfig')
 const BookModel = require('../models/BookModel')
 const { date } = require('faker')
+const { expect } = require('chai')
 
 /**
  * Test cases to test all the book APIs
@@ -27,7 +30,7 @@ describe('Book', () => {
           isbn: faker.random.uuid(),
           author: faker.name.findName(),
           year: new Date(faker.date.past()),
-        }).save((err) => { console.error(err) })
+        }).save()
       }
       done()
     })
@@ -109,8 +112,7 @@ describe('Book', () => {
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.have.property('message').eql('Operation success')
-          testData._id = res.body.data[0]._id
-          console.log(res.body)
+          testData._id = res.body.data[0]._idS
           done()
         })
     })
@@ -128,6 +130,26 @@ describe('Book', () => {
           res.should.have.status(200)
           res.body.should.have.property('message').eql('Operation success')
           testData._id = res.body.data[0]._id
+          done()
+        })
+    })
+  })
+
+  /*
+  /*
+  * Test the /GET pagination route
+  */
+  describe('/GET All books with pagination', () => {
+    it('it should GET all the books, with a pagination', (done) => {
+      chai.request(server)
+        .get('/api/book/all?page=2&booksByPage=6')
+        .set('Authorization', `Bearer ${userTestData.token}`)
+        .end((err, res) => {
+          res.should.have.status(206)
+          res.body.should.have.property('message').eql('Operation success')
+          res.body.data.length.should.eql(6)
+          expect(res).to.have.header('X-Total-Count', 21)
+          expect(res).to.have.header('Link', '/all?page=3')
           done()
         })
     })

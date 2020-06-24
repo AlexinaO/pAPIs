@@ -47,3 +47,12 @@ exports.unauthorizedResponse = (res, msg) => {
   }
   return res.status(401).json(data)
 }
+
+exports.partialContent = (res, msg, data) => {
+  const resData = {
+    status: 1,
+    message: msg,
+    data,
+  }
+  return res.status(206).json(resData)
+}

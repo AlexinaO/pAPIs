@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 const { body, validationResult } = require('express-validator')
 const mongoose = require('mongoose')
 const Book = require('../models/BookModel')
@@ -180,6 +181,30 @@ exports.bookDelete = [
           return apiResponse.successResponse(res, 'Book delete Success.')
         })
       })
+    } catch (err) {
+      // throw error in json response with status 500.
+      return apiResponse.ErrorResponse(res, err)
+    }
+  },
+]
+
+exports.allBooks = [
+  auth,
+  (req, res) => {
+    const page = parseInt(req.query.page) || 0
+    const booksByPage = parseInt(req.query.booksByPage) || 5
+    try {
+      Book.paginate({}, { offset: page, limit: booksByPage })
+	      .then((result) => {
+          res.set('X-Total-Count', result.total)
+          if (result.total > result.docs.length) {
+            res.set('Link', `/all?page=${page + 1}`)
+            return apiResponse.partialContent(res, 'Operation success', result.docs)
+          } if (result.total === result.docs.length) {
+            return apiResponse.successResponseWithData(res, 'Operation success', result.docs)
+          }
+          return apiResponse.notFoundResponse(res, 'Not found')
+        })
     } catch (err) {
       // throw error in json response with status 500.
       return apiResponse.ErrorResponse(res, err)
