@@ -2,6 +2,7 @@
 const { chai, server, faker } = require('./testConfig')
 const BookModel = require('../models/BookModel')
 const { date } = require('faker')
+const { expect } = require('chai')
 
 /**
  * Test cases to test all the book APIs
@@ -144,8 +145,9 @@ describe('Book', () => {
         .end((err, res) => {
           res.should.have.status(206)
           res.body.should.have.property('message').eql('Operation success')
-          res.body.should.have.property('page').eql(2)
-          res.body.should.have.property('booksByPage').eql(6)
+          res.body.data.length.should.eql(6)
+          expect(res).to.have.header('X-Total-Count', 21)
+          expect(res).to.have.header('Link', '/all?page=3')
           done()
         })
     })
