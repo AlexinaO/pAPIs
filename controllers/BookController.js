@@ -1,5 +1,7 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 const { body, validationResult } = require('express-validator')
 const mongoose = require('mongoose')
+const { helpers } = require('faker')
 const Book = require('../models/BookModel')
 const auth = require('../middlewares/jwt')
 const controller = require('../helpers/controller')
@@ -189,24 +191,25 @@ exports.bookDelete = [
 
 exports.allBooks = [
   auth,
-  function (req, res) {
+  (req, res) => {
     const page = parseInt(req.query.page) || 0
-    let booksByPage = parseInt(req.query.booksByPage) || 5
-
+    const booksByPage = parseInt(req.query.booksByPage) || 5
     try {
-	  .sort({ update_at: -1 })
-	  Book.find({}, '_id title description isbn createdAt')
-	  .skip(page * booksByPage)
-	  .limit(booksByPage)
-	  .then((page) => {
-        if (page.length > 0) {
-		}
-		  return apiResponse.partialContent(res, 'Operation success', page)
-        return apiResponse.notFoundResponse(res, 'Not found')
-		})
+      Book.find({})
+        .sort({ update_at: -1 })
+        .skip(page * booksByPage)
+	      .limit(booksByPage)
+	      .then((result) => {
+          res.set('X-Total-Count', result.total)
+          if (result.total === result.docs.length) {
+            res.set('Link', `/all?page=${page.nextPage}`)
+            return apiResponse.partialContent(res, 'Operation success', result.docs)
+          }
+          return apiResponse.notFoundResponse(res, 'Not found')
+        })
     } catch (err) {
       // throw error in json response with status 500.
       return apiResponse.ErrorResponse(res, err)
-  },
     }
+  },
 ]

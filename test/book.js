@@ -109,8 +109,7 @@ describe('Book', () => {
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.have.property('message').eql('Operation success')
-          testData._id = res.body.data[0]._id
-          console.log(res.body)
+          testData._id = res.body.data[0]._idS
           done()
         })
     })
@@ -140,7 +139,7 @@ describe('Book', () => {
   describe('/GET All books with pagination', () => {
     it('it should GET all the books, with a pagination', (done) => {
       chai.request(server)
-        .get('/api/allBook?page=2&booksByPage=6')
+        .get('/api/book/all?page=2&booksByPage=6')
         .set('Authorization', `Bearer ${userTestData.token}`)
         .end((err, res) => {
           res.should.have.status(206)
