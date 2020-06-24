@@ -73,3 +73,27 @@ exports.bookDelete = [
 //     }
 //   },
 // ]
+
+exports.allBooks = [
+  auth,
+  function (req, res) {
+    const page = parseInt(req.query.page) || 0
+    let booksByPage = parseInt(req.query.booksByPage) || 5
+
+    try {
+	  .sort({ update_at: -1 })
+	  Book.find({}, '_id title description isbn createdAt')
+	  .skip(page * booksByPage)
+	  .limit(booksByPage)
+	  .then((page) => {
+        if (page.length > 0) {
+		}
+		  return apiResponse.partialContent(res, 'Operation success', page)
+        return apiResponse.notFoundResponse(res, 'Not found')
+		})
+    } catch (err) {
+      // throw error in json response with status 500.
+      return apiResponse.ErrorResponse(res, err)
+  },
+    }
+]

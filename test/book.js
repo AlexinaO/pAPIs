@@ -134,6 +134,25 @@ describe('Book', () => {
   })
 
   /*
+  /*
+  * Test the /GET pagination route
+  */
+  describe('/GET All books with pagination', () => {
+    it('it should GET all the books, with a pagination', (done) => {
+      chai.request(server)
+        .get('/api/allBook?page=2&booksByPage=6')
+        .set('Authorization', `Bearer ${userTestData.token}`)
+        .end((err, res) => {
+          res.should.have.status(206)
+          res.body.should.have.property('message').eql('Operation success')
+          res.body.should.have.property('page').eql(2)
+          res.body.should.have.property('booksByPage').eql(6)
+          done()
+        })
+    })
+  })
+
+  /*
   * Test the /GET/:id route
   */
   describe('/GET/:id book', () => {
