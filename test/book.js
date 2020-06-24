@@ -1,3 +1,5 @@
+/* eslint-disable import/order */
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 const { chai, server, faker } = require('./testConfig')
 const BookModel = require('../models/BookModel')
@@ -28,7 +30,7 @@ describe('Book', () => {
           isbn: faker.random.uuid(),
           author: faker.name.findName(),
           year: new Date(faker.date.past()),
-        }).save((err) => { console.error(err) })
+        }).save()
       }
       done()
     })
