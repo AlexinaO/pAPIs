@@ -1,12 +1,12 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 const { body, validationResult } = require('express-validator')
 const mongoose = require('mongoose')
-const { helpers } = require('faker')
 const Book = require('../models/BookModel')
 const auth = require('../middlewares/jwt')
 const controller = require('../helpers/controller')
 
 const apiResponse = require('../helpers/apiResponse')
+
 
 mongoose.set('useFindAndModify', false)
 
@@ -195,15 +195,14 @@ exports.allBooks = [
     const page = parseInt(req.query.page) || 0
     const booksByPage = parseInt(req.query.booksByPage) || 5
     try {
-      Book.find({})
-        .sort({ update_at: -1 })
-        .skip(page * booksByPage)
-	      .limit(booksByPage)
+      Book.paginate({}, { offset: page, limit: booksByPage })
 	      .then((result) => {
           res.set('X-Total-Count', result.total)
-          if (result.total === result.docs.length) {
-            res.set('Link', `/all?page=${page.nextPage}`)
+          if (result.total > result.docs.length) {
+            res.set('Link', `/all?page=${page + 1}`)
             return apiResponse.partialContent(res, 'Operation success', result.docs)
+          } if (result.total === result.docs.length) {
+            return apiResponse.successResponseWithData(res, 'Operation success', result.docs)
           }
           return apiResponse.notFoundResponse(res, 'Not found')
         })
