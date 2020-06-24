@@ -24,23 +24,8 @@ function BookData(data) {
  */
 exports.bookList = [
   auth,
-  (req, res) => { controller.Liste(req, res, Book) },
+  (req, res) => { controller.List(req, res, Book) },
 ]
-// function (req, res) {
-// 	try {
-// 		Book.find({user: req.user._id},"_id title description isbn createdAt").then((books)=>{
-// 			if(books.length > 0){
-// 				return apiResponse.successResponseWithData(res, "Operation success", books);
-// 			}else{
-// 				return apiResponse.successResponseWithData(res, "Operation success", []);
-// 			}
-// 		});
-// 	} catch (err) {
-// 		//throw error in json response with status 500.
-// 		return apiResponse.ErrorResponse(res, err);
-// 	}
-// }
-// ];
 
 /**
  * Book Detail.
@@ -53,55 +38,7 @@ exports.bookDetail = [
   auth,
   (req, res) => { controller.Detail(req, res, Book, '_id') },
 ]
-// function (req, res) {
-// 	if(!mongoose.Types.ObjectId.isValid(req.params.id)){
-// 		return apiResponse.successResponseWithData(res, "Operation success", {});
-// 	}
-// 	try {
-// 		Book.findOne({_id: req.params.id,user: req.user._id},"_id title description isbn createdAt").then((book)=>{
-// 			if(book !== null){
-// 				let bookData = new BookData(book);
-// 				return apiResponse.successResponseWithData(res, "Operation success", bookData);
-// 			}else{
-// 				return apiResponse.successResponseWithData(res, "Operation success", {});
-// 			}
-// 		});
-// 	} catch (err) {
-// 		//throw error in json response with status 500.
-// 		return apiResponse.ErrorResponse(res, err);
-// 	}
-// }
-// ];
-/**
- * Book Title.
- *
- * @param {string}      title
- *
- * @returns {Object}
- */
-exports.bookTitle = [
-  auth,
-  (req, res) => { controller.Detail(req, res, Book, 'title') },
-]
-// 	function (req, res) {
-// 		if(!mongoose.Types.ObjectId.isValid(req.params.title)){
-// 			return apiResponse.successResponseWithData(res, "Operation success", {});
-// 		}
-// 		try {
-// 			Book.findOne({title:req.params.title}).then((book)=>{
-// 				if(book !== null){
-// 					let bookData = new BookData(book);
-// 					return apiResponse.successResponseWithData(res, "Operation success", bookData);
-// 				}else{
-// 					return apiResponse.notFoundResponse(res, "not found");
-// 				}
-// 			});
-// 		} catch (err) {
-// 			//throw error in json response with status 500.
-// 			return apiResponse.ErrorResponse(res, err);
-// 		}
-// 	}
-// ];
+
 /**
  * Book store.
  *

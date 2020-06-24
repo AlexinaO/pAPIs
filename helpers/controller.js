@@ -4,7 +4,7 @@ const apiResponse = require('./apiResponse')
 
 mongoose.set('useFindAndModify', false)
 
-exports.Liste = (req, res, Objet) => {
+exports.List = (req, res, Objet) => {
   try {
     Objet.find({ user: req.user._id }, '_id title description isbn createdAt').then((books) => {
       if (books.length > 0) {
@@ -19,16 +19,12 @@ exports.Liste = (req, res, Objet) => {
 }
 
 exports.Detail = (req, res, Objet, attr) => {
-//   req.query
-  console.log('tristan', req.params.id, req.params.id, req.params)
-  console.log(req.params[attr])
   if (!mongoose.Types.ObjectId.isValid(req.params[attr])) {
     return apiResponse.successResponseWithData(res, 'Operation success', {})
   }
   try {
     const query = {}
     query[attr] = req.params[attr]
-    console.log('QUERY: ', query)
     Objet.findOne(query).then((book) => {
       if (book !== null) {
         return apiResponse.successResponseWithData(res, 'Operation success', book)
