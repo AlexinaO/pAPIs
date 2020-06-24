@@ -34,7 +34,7 @@ describe('Book', () => {
     title: 'testing book',
     description: 'testing book desc',
     isbn: '3214htrff4',
-    author: 'titou les pouces vert',
+    author: 'toto',
     year: new Date('1991-03-31'),
   }
 
@@ -95,6 +95,23 @@ describe('Book', () => {
     it('it should GET all the books', (done) => {
       chai.request(server)
         .get('/api/book')
+        .set('Authorization', `Bearer ${userTestData.token}`)
+        .end((err, res) => {
+          res.should.have.status(200)
+          res.body.should.have.property('message').eql('Operation success')
+          testData._id = res.body.data[0]._id
+          done()
+        })
+    })
+  })
+
+  /*
+  * Test the /GET route with query
+  */
+  describe('/GET All book with author=toto', () => {
+    it('it should GET the toto book', (done) => {
+      chai.request(server)
+        .get('/api/book?author=toto')
         .set('Authorization', `Bearer ${userTestData.token}`)
         .end((err, res) => {
           res.should.have.status(200)

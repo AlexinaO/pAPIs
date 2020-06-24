@@ -4,9 +4,15 @@ const apiResponse = require('./apiResponse')
 
 mongoose.set('useFindAndModify', false)
 
+/**
+ *
+ * @param {*} req Express request object
+ * @param {*} res Express response object
+ * @param {*} Objet Mongoose model
+ */
 exports.List = (req, res, Objet) => {
   try {
-    Objet.find({ user: req.user._id }, '_id title description isbn createdAt').then((books) => {
+    Objet.find(req.query).then((books) => {
       if (books.length > 0) {
         return apiResponse.successResponseWithData(res, 'Operation success', books)
       }

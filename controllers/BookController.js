@@ -24,7 +24,7 @@ function BookData(data) {
  */
 exports.bookList = [
   auth,
-  (req, res) => { controller.List(req, res, Book) },
+  (req, res) => controller.List(req, res, Book),
 ]
 
 /**
