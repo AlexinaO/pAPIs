@@ -1,34 +1,18 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "description" : "This is a sample Bookstore server.  You can find \nout more about Swagger at \n[http://swagger.io](http://swagger.io) or on \n[irc.freenode.net, #swagger](http://swagger.io/irc/).\n",
+    "description" : "pAPIs server api",
     "version" : "1.0.0",
-    "title" : "Swagger Bookstore",
-    "termsOfService" : "http://swagger.io/terms/",
-    "contact" : {
-      "email" : "apiteam@swagger.io"
-    },
-    "license" : {
-      "name" : "Apache 2.0",
-      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
-    }
+    "title" : "pAPIs server"
   },
   "host" : "virtserver.swaggerhub.com",
   "basePath" : "/jennifergullung/pAPIsv2/1.0.0",
   "tags" : [ {
     "name" : "book",
-    "description" : "Everything about your Books",
-    "externalDocs" : {
-      "description" : "Find out more",
-      "url" : "http://swagger.io"
-    }
+    "description" : "Books"
   }, {
     "name" : "user",
-    "description" : "Operations about user",
-    "externalDocs" : {
-      "description" : "Find out more about our store",
-      "url" : "http://swagger.io"
-    }
+    "description" : "User"
   } ],
   "schemes" : [ "https", "http" ],
   "paths" : {
@@ -147,6 +131,61 @@
         },
         "security" : [ {
           "bookstore_auth" : [ "write:books", "read:books" ]
+        } ]
+      }
+    },
+    "/api/book/all" : {
+      "get" : {
+        "tags" : [ "book" ],
+        "summary" : "Find all books with pagination",
+        "description" : "Returns all books with pagination",
+        "operationId" : "allBooks",
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "name" : "X-Request-ID",
+          "in" : "header",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "Link",
+          "in" : "header",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "page",
+          "in" : "path",
+          "description" : "wanted page",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "booksByPage",
+          "in" : "path",
+          "description" : "number of books wanted by page",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Book"
+            }
+          },
+          "206" : {
+            "description" : "Partial result",
+            "schema" : {
+              "$ref" : "#/definitions/Book"
+            }
+          },
+          "400" : {
+            "description" : "Invalid wanted page or number of books supplied"
+          },
+          "404" : {
+            "description" : "Books not found"
+          }
+        },
+        "security" : [ {
+          "api_key" : [ ]
         } ]
       }
     },
@@ -443,9 +482,5 @@
         "name" : "User"
       }
     }
-  },
-  "externalDocs" : {
-    "description" : "Find out more about Swagger",
-    "url" : "http://swagger.io"
   }
 }
