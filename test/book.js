@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
-const { chai, server } = require('./testConfig')
+const { chai, server, faker } = require('./testConfig')
 const BookModel = require('../models/BookModel')
+const { date } = require('faker')
 
 /**
  * Test cases to test all the book APIs
@@ -16,9 +17,18 @@ const BookModel = require('../models/BookModel')
  */
 
 describe('Book', () => {
-  // Before each test we empty the database
+  // Before each test we empty the database and create new random books
   before((done) => {
     BookModel.deleteMany({}, () => {
+      for (let index = 0; index < 20; index++) {
+        new BookModel({
+          title: faker.lorem.words(),
+          description: faker.lorem.paragraph(),
+          isbn: faker.random.uuid(),
+          author: faker.name.findName(),
+          year: new Date(faker.date.past()),
+        }).save((err) => { console.error(err) })
+      }
       done()
     })
   })
@@ -100,6 +110,7 @@ describe('Book', () => {
           res.should.have.status(200)
           res.body.should.have.property('message').eql('Operation success')
           testData._id = res.body.data[0]._id
+          console.log(res.body)
           done()
         })
     })
