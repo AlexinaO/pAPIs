@@ -1,37 +1,24 @@
-/* eslint-disable import/order */
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
-const { chai, server, faker } = require('./testConfig')
-const BookModel = require('../models/BookModel')
-const { date } = require('faker')
-const { expect } = require('chai')
+const { chai, server } = require('./testConfig')
+const MovieModel = require('../models/MovieModel')
 
 /**
- * Test cases to test all the book APIs
+ * Test cases to test all the movie APIs
  * Covered Routes:
  * (1) Log in
- * (2) Store book
- * (3) Get all books
- * (4) Get single book
+ * (2) Store movie
+ * (3) Get all movie
+ * (4) Get single movie
  * (5) Recherche par titre
- * (6) Update book
- * (7) Delete book
+ * (6) Update movie
+ * (7) Delete movie
 
  */
 
-describe('Book', () => {
-  // Before each test we empty the database and create new random books
+describe('Movie', () => {
+  // Before each test we empty the database
   before((done) => {
-    BookModel.deleteMany({}, () => {
-      for (let index = 0; index < 20; index++) {
-        new BookModel({
-          title: faker.lorem.words(),
-          description: faker.lorem.paragraph(),
-          isbn: faker.random.uuid(),
-          author: faker.name.findName(),
-          year: new Date(faker.date.past()),
-        }).save()
-      }
+    MovieModel.deleteMany({}, () => {
       done()
     })
   })
@@ -44,9 +31,9 @@ describe('Book', () => {
 
   // Prepare data for testing
   const testData = {
-    title: 'testing book',
-    description: 'testing book desc',
-    isbn: '3214htrff4',
+    title: 'testing movie',
+    description: 'testing movie desc',
+    isan: '3214htrff4',
     author: 'toto',
     year: new Date('1991-03-31'),
   }
@@ -55,7 +42,7 @@ describe('Book', () => {
   * Test the /POST route
   */
   describe('/POST Login', () => {
-    it('it should do user Login for book', (done) => {
+    it('it should do user Login for movie', (done) => {
       chai.request(server)
         .post('/api/auth/login')
         .send({ email: userTestData.email, password: userTestData.password })
@@ -71,10 +58,10 @@ describe('Book', () => {
   /*
   * Test the /POST route
   */
-  describe('/POST Book Store', () => {
-    it('It should send validation error for store book', (done) => {
+  describe('/POST Movie Store', () => {
+    it('It should send validation error for store movie', (done) => {
       chai.request(server)
-        .post('/api/book')
+        .post('/api/movie')
         .send()
         .set('Authorization', `Bearer ${userTestData.token}`)
         .end((err, res) => {
@@ -87,10 +74,10 @@ describe('Book', () => {
   /*
   * Test the /POST route
   */
-  describe('/POST Book Store', () => {
-    it('It should store book', (done) => {
+  describe('/POST Movie Store', () => {
+    it('It should store movie', (done) => {
       chai.request(server)
-        .post('/api/book')
+        .post('/api/movie')
         .send(testData)
         .set('Authorization', `Bearer ${userTestData.token}`)
         .end((err, res) => {
@@ -104,27 +91,10 @@ describe('Book', () => {
   /*
   * Test the /GET route
   */
-  describe('/GET All book', () => {
-    it('it should GET all the books', (done) => {
+  describe('/GET All movie', () => {
+    it('it should GET all the movies', (done) => {
       chai.request(server)
-        .get('/api/book')
-        .set('Authorization', `Bearer ${userTestData.token}`)
-        .end((err, res) => {
-          res.should.have.status(200)
-          res.body.should.have.property('message').eql('Operation success')
-          testData._id = res.body.data[0]._idS
-          done()
-        })
-    })
-  })
-
-  /*
-  * Test the /GET route with query
-  */
-  describe('/GET All book with author=toto', () => {
-    it('it should GET the toto book', (done) => {
-      chai.request(server)
-        .get('/api/book?author=toto')
+        .get('/api/movie')
         .set('Authorization', `Bearer ${userTestData.token}`)
         .end((err, res) => {
           res.should.have.status(200)
@@ -136,20 +106,17 @@ describe('Book', () => {
   })
 
   /*
-  /*
-  * Test the /GET pagination route
+  * Test the /GET route with query
   */
-  describe('/GET All books with pagination', () => {
-    it('it should GET all the books, with a pagination', (done) => {
+  describe('/GET All movie with author=toto', () => {
+    it('it should GET the toto movie', (done) => {
       chai.request(server)
-        .get('/api/book/all?page=2&booksByPage=6')
+        .get('/api/movie?author=toto')
         .set('Authorization', `Bearer ${userTestData.token}`)
         .end((err, res) => {
-          res.should.have.status(206)
+          res.should.have.status(200)
           res.body.should.have.property('message').eql('Operation success')
-          res.body.data.length.should.eql(6)
-          expect(res).to.have.header('X-Total-Count', 21)
-          expect(res).to.have.header('Link', '/all?page=3')
+          testData._id = res.body.data[0]._id
           done()
         })
     })
@@ -158,10 +125,10 @@ describe('Book', () => {
   /*
   * Test the /GET/:id route
   */
-  describe('/GET/:id book', () => {
-    it('it should GET the books', (done) => {
+  describe('/GET/:id movie', () => {
+    it('it should GET the movies', (done) => {
       chai.request(server)
-        .get(`/api/book/${testData._id}`)
+        .get(`/api/movie/${testData._id}`)
         .set('Authorization', `Bearer ${userTestData.token}`)
         .end((err, res) => {
           res.should.have.status(200)
@@ -174,10 +141,10 @@ describe('Book', () => {
   /*
 * Test the /GET/:title route
 */
-  describe('/GET/:title book', () => {
-    it('it should GET the books', (done) => {
+  describe('/GET/:title movie', () => {
+    it('it should GET the movies', (done) => {
       chai.request(server)
-        .get(`/api/book/title/${testData.title}`)
+        .get(`/api/movie/title/${testData.title}`)
         .set('Authorization', `Bearer ${userTestData.token}`)
         .end((err, res) => {
           res.should.have.status(200)
@@ -190,10 +157,10 @@ describe('Book', () => {
   /*
   * Test the /PUT/:id route
   */
-  describe('/PUT/:id book', () => {
-    it('it should PUT the books', (done) => {
+  describe('/PUT/:id movie', () => {
+    it('it should PUT the movies', (done) => {
       chai.request(server)
-        .put(`/api/book/${testData._id}`)
+        .put(`/api/movie/${testData._id}`)
         .send(testData)
         .set('Authorization', `Bearer ${userTestData.token}`)
         .end((err, res) => {
@@ -207,10 +174,10 @@ describe('Book', () => {
   /*
   * Test the /DELETE/:id route
   */
-  describe('/DELETE/:id book', () => {
-    it('it should DELETE the books', (done) => {
+  describe('/DELETE/:id movie', () => {
+    it('it should DELETE the movies', (done) => {
       chai.request(server)
-        .delete(`/api/book/${testData._id}`)
+        .delete(`/api/movie/${testData._id}`)
         .set('Authorization', `Bearer ${userTestData.token}`)
         .end((err, res) => {
           res.should.have.status(200)

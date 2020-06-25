@@ -5,10 +5,6 @@ const Book = require('../models/BookModel')
 const auth = require('../middlewares/jwt')
 const controller = require('../helpers/controller')
 
-const apiResponse = require('../helpers/apiResponse')
-
-mongoose.set('useFindAndModify', false)
-
 /**
  * Book List.
  */
