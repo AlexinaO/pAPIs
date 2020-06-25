@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const apiResponse = require('./apiResponse')
+
 mongoose.set('useFindAndModify', false)
 
 /**
@@ -43,7 +44,6 @@ exports.Detail = (req, res, Objet, attr) => {
 exports.Store = (req, res, Objet, Unique) => {
   const query = {}
   query[Unique] = req.body[Unique]
-  console.log('test99', query)
   Objet.findOne(query).then((objet) => {
     if (objet) {
       return Promise.reject('Objet already exist with this Unique no.')
@@ -52,13 +52,13 @@ exports.Store = (req, res, Objet, Unique) => {
 
   try {
     // Save objet.
-    req.body.save((err) => {
-    if (err) { return apiResponse.ErrorResponse(res, err) }
+    // eslint-disable-next-line no-new-object
+    new Objet(Object.assign(req.body, { user: req.user })).save((err) => {
+      if (err) { return apiResponse.validationErrorWithData(res, 'Validation error', err) }
       return apiResponse.successResponseWithData(res, 'Book add Success.')
     })
-  }
-  catch (err) {
-		      // throw error in json response with status 500.
-		  return apiResponse.ErrorResponse(res, err)
+  } catch (err) {
+  // throw error in json response with status 500.
+    return apiResponse.ErrorResponse(res, err)
   }
 }
