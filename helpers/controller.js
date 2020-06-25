@@ -11,9 +11,9 @@ mongoose.set('useFindAndModify', false)
  */
 exports.List = (req, res, Objet) => {
   try {
-    Objet.find(req.query).then((books) => {
-      if (books.length > 0) {
-        return apiResponse.successResponseWithData(res, 'Operation success', books)
+    Objet.find(req.query).then((objet) => {
+      if (objet.length > 0) {
+        return apiResponse.successResponseWithData(res, 'Operation success', objet)
       }
       return apiResponse.notFoundResponse(res, 'not found')
     })
@@ -30,9 +30,9 @@ exports.Detail = (req, res, Objet, attr) => {
   try {
     const query = {}
     query[attr] = req.params[attr]
-    Objet.findOne(query).then((book) => {
-      if (book !== null) {
-        return apiResponse.successResponseWithData(res, 'Operation success', book)
+    Objet.findOne(query).then((objet) => {
+      if (objet !== null) {
+        return apiResponse.successResponseWithData(res, 'Operation success', objet)
       }
       return apiResponse.notFoundResponse(res, 'not found')
     })
@@ -55,7 +55,7 @@ exports.Store = (req, res, Objet, Unique) => {
     // eslint-disable-next-line no-new-object
     new Objet(Object.assign(req.body, { user: req.user })).save((err) => {
       if (err) { return apiResponse.validationErrorWithData(res, 'Validation error', err) }
-      return apiResponse.successResponseWithData(res, 'Book add Success.')
+      return apiResponse.successResponseWithData(res, 'Objet add Success.')
     })
   } catch (err) {
   // throw error in json response with status 500.
@@ -76,7 +76,7 @@ exports.Update = (req, res, Objet, Unique) => {
       if (e) {
         return apiResponse.ErrorResponse(res, e)
       }
-      return apiResponse.successResponseWithData(res, 'Book update Success')
+      return apiResponse.successResponseWithData(res, 'Objet update Success')
     })
   } catch (err) {
   // throw error in json response with status 500.
@@ -88,20 +88,20 @@ exports.Delete = (req, res, Objet) => {
     return apiResponse.validationErrorWithData(res, 'Invalid Error.', 'Invalid ID')
   }
   try {
-    Objet.findById(req.params.id, (err, foundBook) => {
-      if (foundBook === null) {
-        return apiResponse.notFoundResponse(res, 'Book not exists with this id')
+    Objet.findById(req.params.id, (err, foundObjet) => {
+      if (foundObjet === null) {
+        return apiResponse.notFoundResponse(res, 'Objet not exists with this id')
       }
       // Check authorized user
-      if (foundBook.user.toString() !== req.user._id) {
+      if (foundObjet.user.toString() !== req.user._id) {
         return apiResponse.unauthorizedResponse(res, 'You are not authorized to do this operation.')
       }
-      // delete book.
+      // delete.
       Objet.findByIdAndRemove(req.params.id, (e) => {
         if (e) {
           return apiResponse.ErrorResponse(res, e)
         }
-        return apiResponse.successResponse(res, 'Book delete Success.')
+        return apiResponse.successResponse(res, 'Objet delete Success.')
       })
     })
   } catch (err) {
