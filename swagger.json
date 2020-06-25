@@ -193,12 +193,12 @@
       "post" : {
         "tags" : [ "auth" ],
         "summary" : "Logs user into the system",
-        "operationId" : "loginUser",
+        "operationId" : "login",
         "produces" : [ "application/json", "application/xml" ],
         "parameters" : [ {
-          "name" : "username",
+          "name" : "email",
           "in" : "query",
-          "description" : "The user name for login",
+          "description" : "The email for login",
           "required" : true,
           "type" : "string"
         }, {
@@ -211,24 +211,12 @@
         "responses" : {
           "200" : {
             "description" : "successful operation",
-            "headers" : {
-              "X-Rate-Limit" : {
-                "type" : "integer",
-                "format" : "int32",
-                "description" : "calls per hour allowed by the user"
-              },
-              "X-Expires-After" : {
-                "type" : "string",
-                "format" : "date-time",
-                "description" : "date in UTC when token expires"
-              }
-            },
             "schema" : {
               "type" : "string"
             }
           },
           "400" : {
-            "description" : "Invalid username/password supplied"
+            "description" : "Invalid email/password supplied"
           }
         }
       }
@@ -247,13 +235,53 @@
         }
       }
     },
+    "auth/register" : {
+      "post" : {
+        "tags" : [ "auth" ],
+        "summary" : "Add a new user",
+        "operationId" : "register",
+        "consumes" : [ "application/json", "application/xml" ],
+        "produces" : [ "application/json", "application/xml" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "User object that needs to be added",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/User"
+          }
+        } ],
+        "responses" : {
+          "405" : {
+            "description" : "Invalid input"
+          },
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+        }
+      }
+    },
     "/auth/verify-otp" : {
       "post" : {
         "tags" : [ "auth" ],
         "summary" : "verify-otp",
-        "operationId" : "verify-otp",
+        "operationId" : "verifyConfirm",
         "produces" : [ "application/json", "application/xml" ],
-        "parameters" : [ ],
+        "parameters" : [ {
+          "name" : "email",
+          "in" : "query",
+          "description" : "The email for confirmation",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "otp",
+          "in" : "query",
+          "description" : "one time password",
+          "required" : true,
+          "type" : "string"
+        } ],
         "responses" : {
           "default" : {
             "description" : "successful operation"
@@ -265,9 +293,15 @@
       "post" : {
         "tags" : [ "auth" ],
         "summary" : "resend verify-otp",
-        "operationId" : "verify-otp",
+        "operationId" : "resendConfirmOtp",
         "produces" : [ "application/json", "application/xml" ],
-        "parameters" : [ ],
+        "parameters" : [ {
+          "name" : "email",
+          "in" : "query",
+          "description" : "The email for confirmation",
+          "required" : true,
+          "type" : "string"
+        } ],
         "responses" : {
           "default" : {
             "description" : "successful operation"
