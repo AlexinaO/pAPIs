@@ -1,12 +1,7 @@
-const { body, validationResult } = require('express-validator')
 const mongoose = require('mongoose')
 const Book = require('../models/BookModel')
 const auth = require('../middlewares/jwt')
 const controller = require('../helpers/controller')
-
-const apiResponse = require('../helpers/apiResponse')
-
-mongoose.set('useFindAndModify', false)
 
 /**
  * Book List.
@@ -46,5 +41,4 @@ exports.bookDelete = [
   auth,
   (req, res) => { controller.Delete(req, res, Book) },
 ]
-,
 // ]
