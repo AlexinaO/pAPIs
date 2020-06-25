@@ -7,6 +7,22 @@ Run tests :
 docker-compose up --exit-code-from web
 ```
 
+```
+
+docker build . --tag papis
+
+docker tag papis localhost:5000/papis:0.0.1
+
+kubectl create -f ./k8s/
+
+minikube start
+
+minikube service web
+
+minikube service papis --url
+
+```
+
 ### Setting up environments
 
 1.  You will find a file named `.env.example` on root directory of project.
