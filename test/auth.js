@@ -8,8 +8,6 @@ const UserModel = require('../models/UserModel')
  * Covered Routes:
  * (1) Login
  * (2) Register
- * (3) Resend Confirm OTP
- * (4) Verify Confirm OTP
  */
 
 describe('Auth', () => {
@@ -55,55 +53,6 @@ describe('Auth', () => {
           res.should.have.status(200)
           res.body.should.have.property('message').eql('Registration Success.')
           testData._id = res.body.data._id
-          done()
-        })
-    })
-  })
-
-  /*
-  * Test the /POST route
-  */
-  describe('/POST Login', () => {
-    it('it should Send account not confirm notice.', (done) => {
-      chai.request(server)
-        .post('/api/auth/login')
-        .send({ email: testData.email, password: testData.password })
-        .end((err, res) => {
-          res.should.have.status(401)
-          res.body.should.have.property('message').eql('Account is not confirmed. Please confirm your account.')
-          done()
-        })
-    })
-  })
-
-  /*
-  * Test the /POST route
-  */
-  describe('/POST Resend  Confirm OTP', () => {
-    it('It should resend  confirm OTP', (done) => {
-      chai.request(server)
-        .post('/api/auth/resend-verify-otp')
-        .send({ email: testData.email })
-        .end((err, res) => {
-          res.should.have.status(200)
-          UserModel.findOne({ _id: testData._id }, 'confirmOTP').then((user) => {
-            testData.confirmOTP = user.confirmOTP
-            done()
-          })
-        })
-    })
-  })
-
-  /*
-  * Test the /POST route
-  */
-  describe('/POST Verify Confirm OTP', () => {
-    it('It should verify confirm OTP', (done) => {
-      chai.request(server)
-        .post('/api/auth/verify-otp')
-        .send({ email: testData.email, otp: testData.confirmOTP })
-        .end((err, res) => {
-          res.should.have.status(200)
           done()
         })
     })

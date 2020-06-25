@@ -246,34 +246,6 @@
           }
         }
       }
-    },
-    "/auth/verify-otp" : {
-      "post" : {
-        "tags" : [ "auth" ],
-        "summary" : "verify-otp",
-        "operationId" : "verify-otp",
-        "produces" : [ "application/json", "application/xml" ],
-        "parameters" : [ ],
-        "responses" : {
-          "default" : {
-            "description" : "successful operation"
-          }
-        }
-      }
-    },
-    "/auth/resend-verify-otp" : {
-      "post" : {
-        "tags" : [ "auth" ],
-        "summary" : "resend verify-otp",
-        "operationId" : "verify-otp",
-        "produces" : [ "application/json", "application/xml" ],
-        "parameters" : [ ],
-        "responses" : {
-          "default" : {
-            "description" : "successful operation"
-          }
-        }
-      }
     }
   },
   "securityDefinitions" : {

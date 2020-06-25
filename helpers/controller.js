@@ -49,7 +49,6 @@ exports.Store = (req, res, Objet, Unique) => {
       return Promise.reject('Objet already exist with this Unique no.')
     }
   })
-
   try {
     // Save objet.
     // eslint-disable-next-line no-new-object
@@ -58,18 +57,13 @@ exports.Store = (req, res, Objet, Unique) => {
       return apiResponse.successResponseWithData(res, 'Objet add Success.')
     })
   } catch (err) {
-  // throw error in json response with status 500.
+    // throw error in json response with status 500.
     return apiResponse.ErrorResponse(res, err)
   }
 }
 exports.Update = (req, res, Objet, Unique) => {
   const query = {}
   query[Unique] = req.body[Unique]
-  Objet.findOne(query).then((objet) => {
-    if (objet) {
-      return Promise.reject('Objet already exist with this Unique no.')
-    }
-  })
   try {
     const objet = new Objet(Object.assign(req.body, { user: req.user }))
     Objet.findByIdAndUpdate(req.params.id, objet, (e) => {
@@ -79,7 +73,7 @@ exports.Update = (req, res, Objet, Unique) => {
       return apiResponse.successResponseWithData(res, 'Objet update Success')
     })
   } catch (err) {
-  // throw error in json response with status 500.
+    // throw error in json response with status 500.
     return apiResponse.ErrorResponse(res, err)
   }
 }

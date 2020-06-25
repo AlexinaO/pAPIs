@@ -65,7 +65,7 @@ exports.register = [
           constants.confirmEmails.from,
           req.body.email,
           'Confirm Account',
-          html,
+          html
         ).then(() => {
           // Save user.
           user.save((e) => {
@@ -116,11 +116,6 @@ exports.login = [
           if (!same) {
             return apiResponse.unauthorizedResponse(res, 'Email or Password wrong.')
           }
-          // Check account confirmation.
-          if (!user.isConfirmed) {
-            return apiResponse.unauthorizedResponse(res, 'Account is not confirmed. Please confirm your account.')
-          }
-          // Check User's account active or not.
           if (!user.status) {
             return apiResponse.unauthorizedResponse(res, 'Account is not active. Please contact admin.')
           }
@@ -139,106 +134,6 @@ exports.login = [
           // Generated JWT token with Payload and secret.
           userData.token = jwt.sign(jwtPayload, secret, jwtData)
           return apiResponse.successResponseWithData(res, 'Login Success.', userData)
-        })
-      })
-    } catch (err) {
-      return apiResponse.ErrorResponse(res, err)
-    }
-  }]
-
-/**
- * Verify Confirm otp.
- *
- * @param {string}      email
- * @param {string}      otp
- *
- * @returns {Object}
- */
-exports.verifyConfirm = [
-  body('email').isLength({ min: 1 }).trim().withMessage('Email must be specified.')
-    .isEmail()
-    .withMessage('Email must be a valid email address.')
-    .escape()
-    .normalizeEmail(),
-  body('otp').isLength({ min: 1 }).trim().withMessage('OTP must be specified.')
-    .escape(),
-  (req, res) => {
-    try {
-      const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        return apiResponse.validationErrorWithData(res, 'Validation Error.', errors.array())
-      }
-      const query = { email: req.body.email }
-      UserModel.findOne(query).then((user) => {
-        if (!user) {
-          return apiResponse.unauthorizedResponse(res, 'Specified email not found.')
-        }
-        // Check already confirm or not.
-        if (user.isConfirmed) {
-          return apiResponse.unauthorizedResponse(res, 'Account already confirmed.')
-        }
-        // Check account confirmation.
-        if (user.confirmOTP !== req.body.otp) {
-          return apiResponse.unauthorizedResponse(res, 'Otp does not match')
-        }
-        // Update user as confirmed
-        UserModel.findOneAndUpdate(query, {
-          isConfirmed: 1,
-          confirmOTP: null,
-        }).catch((err) => apiResponse.ErrorResponse(res, err))
-        return apiResponse.successResponse(res, 'Account confirmed success.')
-      })
-    } catch (err) {
-      return apiResponse.ErrorResponse(res, err)
-    }
-  }]
-
-/**
- * Resend Confirm otp.
- *
- * @param {string}      email
- *
- * @returns {Object}
- */
-exports.resendConfirmOtp = [
-  body('email').isLength({ min: 1 }).trim().withMessage('Email must be specified.')
-    .isEmail()
-    .withMessage('Email must be a valid email address.')
-    .escape()
-    .normalizeEmail(),
-  (req, res) => {
-    try {
-      const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        return apiResponse.validationErrorWithData(res, 'Validation Error.', errors.array())
-      }
-      const query = { email: req.body.email }
-      UserModel.findOne(query).then((user) => {
-        if (!user) {
-          return apiResponse.unauthorizedResponse(res, 'Specified email not found.')
-        }
-        // Check already confirm or not.
-        if (user.isConfirmed) {
-          return apiResponse.unauthorizedResponse(res, 'Account already confirmed.')
-        }
-        // Generate otp
-        const otp = utility.randomNumber(4)
-        // Html email body
-        const html = `<p>Please Confirm your Account.</p><p>OTP: ${otp}</p>`
-        // Send confirmation email
-        mailer.send(
-          constants.confirmEmails.from,
-          req.body.email,
-          'Confirm Account',
-          html,
-        ).then(() => {
-          user.isConfirmed = 0
-          user.confirmOTP = otp
-          // Save user.
-          user.save((err) => {
-            if (err) { return apiResponse.ErrorResponse(res, err) }
-            return apiResponse.successResponse(res, 'Confirm otp sent.')
-          })
         })
       })
     } catch (err) {
