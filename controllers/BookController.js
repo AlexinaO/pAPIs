@@ -50,42 +50,45 @@ exports.bookDetail = [
  */
 exports.bookStore = [
   auth,
-  body('title', 'Title must not be empty.').isLength({ min: 1 }).trim(),
-  body('description', 'Description must not be empty.').isLength({ min: 1 }).trim(),
-  body('isbn', 'ISBN must not be empty').isLength({ min: 1 }).trim().custom((value, { req }) => Book.findOne({ isbn: value, user: req.user._id }).then((book) => {
-    if (book) {
-      return Promise.reject('Book already exist with this ISBN no.')
-    }
-  })),
-  body('*').escape(),
-  (req, res) => {
-    try {
-      const errors = validationResult(req)
-      const book = new Book({
-        title: req.body.title,
-        user: req.user,
-        description: req.body.description,
-        isbn: req.body.isbn,
-        author: req.body.author,
-        year: req.body.year,
-      })
-
-      if (!errors.isEmpty()) {
-        return apiResponse.validationErrorWithData(res, 'Validation Error.', errors.array())
-      }
-
-      // Save book.
-      book.save((err) => {
-        if (err) { return apiResponse.ErrorResponse(res, err) }
-        const bookData = new BookData(book)
-        return apiResponse.successResponseWithData(res, 'Book add Success.', bookData)
-      })
-    } catch (err) {
-      // throw error in json response with status 500.
-      return apiResponse.ErrorResponse(res, err)
-    }
-  },
+  (req, res) => { controller.Store(req, res, Book, 'isbn') },
 ]
+
+//   body('title', 'Title must not be empty.').isLength({ min: 1 }).trim(),
+//   body('description', 'Description must not be empty.').isLength({ min: 1 }).trim(),
+//   body('isbn', 'ISBN must not be empty').isLength({ min: 1 }).trim().custom((value, { req }) => Book.findOne({ isbn: value, user: req.user._id }).then((book) => {
+//     if (book) {
+//       return Promise.reject('Book already exist with this ISBN no.')
+//     }
+//   })),
+//   body('*').escape(),
+//   (req, res) => {
+//     try {
+//       const errors = validationResult(req)
+//       const book = new Book({
+//         title: req.body.title,
+//         user: req.user,
+//         description: req.body.description,
+//         isbn: req.body.isbn,
+//         author: req.body.author,
+//         year: req.body.year,
+//       })
+
+//       if (!errors.isEmpty()) {
+//         return apiResponse.validationErrorWithData(res, 'Validation Error.', errors.array())
+//       }
+
+//       // Save book.
+//       book.save((err) => {
+//         if (err) { return apiResponse.ErrorResponse(res, err) }
+//         const bookData = new BookData(book)
+//         return apiResponse.successResponseWithData(res, 'Book add Success.', bookData)
+//       })
+//     } catch (err) {
+//       // throw error in json response with status 500.
+//       return apiResponse.ErrorResponse(res, err)
+//     }
+//   },
+// ]
 
 /**
  * Book update.

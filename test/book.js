@@ -5,7 +5,7 @@ const BookModel = require('../models/BookModel')
 /**
  * Test cases to test all the book APIs
  * Covered Routes:
- * (1) Login
+ * (1) Log in
  * (2) Store book
  * (3) Get all books
  * (4) Get single book
