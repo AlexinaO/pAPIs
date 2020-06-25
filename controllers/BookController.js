@@ -47,33 +47,6 @@ exports.bookDelete = [
   auth,
   (req, res) => { controller.Delete(req, res, Book) },
 ]
-//   (req, res) => {
-//     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-//       return apiResponse.validationErrorWithData(res, 'Invalid Error.', 'Invalid ID')
-//     }
-//     try {
-//       Book.findById(req.params.id, (err, foundBook) => {
-//         if (foundBook === null) {
-//           return apiResponse.notFoundResponse(res, 'Book not exists with this id')
-//         }
-//         // Check authorized user
-//         if (foundBook.user.toString() !== req.user._id) {
-//           return apiResponse.unauthorizedResponse(res, 'You are not authorized to do this operation.')
-//         }
-//         // delete book.
-//         Book.findByIdAndRemove(req.params.id, (e) => {
-//           if (e) {
-//             return apiResponse.ErrorResponse(res, e)
-//           }
-//           return apiResponse.successResponse(res, 'Book delete Success.')
-//         })
-//       })
-//     } catch (err) {
-//       // throw error in json response with status 500.
-//       return apiResponse.ErrorResponse(res, err)
-//     }
-//   },
-// ]
 
 exports.allBooks = [
   auth,

@@ -25,7 +25,7 @@ const BookSchema = new Schema({
     type: Schema.ObjectId,
     minlength: 1,
     ref: 'User',
-    required: true,
+    required: false,
   },
 
   author: {
@@ -38,6 +38,6 @@ const BookSchema = new Schema({
     type: Date,
     required: true,
   },
-}, { timestamps: true, strict: true })
+}, { timestamps: true, strict: true }).plugin(mongoosePaginate)
 
 module.exports = mongoose.model('Book', BookSchema)
