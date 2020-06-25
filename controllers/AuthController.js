@@ -78,9 +78,7 @@ exports.register = [
             }
             return apiResponse.successResponseWithData(res, 'Registration Success.', userData)
           })
-        }).catch((e) => {
-          return apiResponse.ErrorResponse(res, e)
-        });
+        }).catch((e) => apiResponse.ErrorResponse(res, e))
       })
     } catch (err) {
       // throw error in json response with status 500.
@@ -132,7 +130,7 @@ exports.login = [
             lastName: user.lastName,
             email: user.email,
           }
-            // Prepare JWT token for authentication
+          // Prepare JWT token for authentication
           const jwtPayload = userData
           const jwtData = {
             expiresIn: process.env.JWT_TIMEOUT_DURATION,
@@ -141,7 +139,7 @@ exports.login = [
           // Generated JWT token with Payload and secret.
           userData.token = jwt.sign(jwtPayload, secret, jwtData)
           return apiResponse.successResponseWithData(res, 'Login Success.', userData)
-        });
+        })
       })
     } catch (err) {
       return apiResponse.ErrorResponse(res, err)
@@ -189,7 +187,7 @@ exports.verifyConfirm = [
           confirmOTP: null,
         }).catch((err) => apiResponse.ErrorResponse(res, err))
         return apiResponse.successResponse(res, 'Account confirmed success.')
-      });
+      })
     } catch (err) {
       return apiResponse.ErrorResponse(res, err)
     }
@@ -240,9 +238,9 @@ exports.resendConfirmOtp = [
           user.save((err) => {
             if (err) { return apiResponse.ErrorResponse(res, err) }
             return apiResponse.successResponse(res, 'Confirm otp sent.')
-          });
+          })
         })
-      });
+      })
     } catch (err) {
       return apiResponse.ErrorResponse(res, err)
     }

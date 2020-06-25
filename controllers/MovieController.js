@@ -1,4 +1,3 @@
-const mongoose = require('mongoose')
 const Movie = require('../models/MovieModel')
 const auth = require('../middlewares/jwt')
 const controller = require('../helpers/controller')

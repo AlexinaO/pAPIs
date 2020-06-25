@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
     "test": "nyc _mocha --timeout 10000 --exit --report lcovonly -- -R spec",
-    "lint": "eslint --fix --config .eslintrc.json \"**/*.js\""
+    "lint": "eslint --fix --config .eslintrc.js \"**/*.js\""
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
