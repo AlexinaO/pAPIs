@@ -70,7 +70,6 @@ exports.Update = (req, res, Objet, Unique) => {
       return Promise.reject('Objet already exist with this Unique no.')
     }
   })
-  console.log('tistou', req.params.id)
   try {
     const objet = new Objet(Object.assign(req.body, { user: req.user }))
     Objet.findByIdAndUpdate(req.params.id, objet, (e) => {
@@ -83,4 +82,30 @@ exports.Update = (req, res, Objet, Unique) => {
   // throw error in json response with status 500.
     return apiResponse.ErrorResponse(res, err)
   }
+}
+exports.Delete = (req, res, Objet) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return apiResponse.validationErrorWithData(res, 'Invalid Error.', 'Invalid ID')
+    }
+    try {
+      Objet.findById(req.params.id, (err, foundBook) => {
+        if (foundBook === null) {
+          return apiResponse.notFoundResponse(res, 'Book not exists with this id')
+        }
+        // Check authorized user
+        if (foundBook.user.toString() !== req.user._id) {
+          return apiResponse.unauthorizedResponse(res, 'You are not authorized to do this operation.')
+        }
+        // delete book.
+        Objet.findByIdAndRemove(req.params.id, (e) => {
+          if (e) {
+            return apiResponse.ErrorResponse(res, e)
+          }
+          return apiResponse.successResponse(res, 'Book delete Success.')
+        })
+      })
+    } catch (err) {
+      // throw error in json response with status 500.
+      return apiResponse.ErrorResponse(res, err)
+    }
 }
