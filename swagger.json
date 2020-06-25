@@ -235,7 +235,7 @@
         }
       }
     },
-    "auth/register" : {
+    "/auth/register" : {
       "post" : {
         "tags" : [ "auth" ],
         "summary" : "Add a new user",
@@ -260,6 +260,7 @@
             "schema" : {
               "type" : "string"
             }
+          } 
         }
       }
     },
