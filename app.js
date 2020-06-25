@@ -6,6 +6,7 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const logger = require('debug')('web')
 const swaggerUi = require('swagger-ui-express')
+const morgan = require('morgan')
 const swaggerDocument = require('./swagger.json')
 const indexRouter = require('./routes/index')
 const apiRouter = require('./routes/api')
@@ -30,6 +31,8 @@ mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true 
 const db = mongoose.connection
 
 const app = express()
+
+app.use(morgan('tiny'))
 
 // display swagger
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
