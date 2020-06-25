@@ -165,7 +165,7 @@ describe('Book', () => {
         .set('Authorization', `Bearer ${userTestData.token}`)
         .end((err, res) => {
           res.should.have.status(200)
-          res.body.should.have.property('message').eql('Book update Success.')
+          res.body.should.have.property('message').eql('Book update Success')
           done()
         })
     })

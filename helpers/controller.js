@@ -62,3 +62,25 @@ exports.Store = (req, res, Objet, Unique) => {
     return apiResponse.ErrorResponse(res, err)
   }
 }
+exports.Update = (req, res, Objet, Unique) => {
+  const query = {}
+  query[Unique] = req.body[Unique]
+  Objet.findOne(query).then((objet) => {
+    if (objet) {
+      return Promise.reject('Objet already exist with this Unique no.')
+    }
+  })
+  console.log('tistou', req.params.id)
+  try {
+    const objet = new Objet(Object.assign(req.body, { user: req.user }))
+    Objet.findByIdAndUpdate(req.params.id, objet, (e) => {
+      if (e) {
+        return apiResponse.ErrorResponse(res, e)
+      }
+      return apiResponse.successResponseWithData(res, 'Book update Success')
+    })
+  } catch (err) {
+  // throw error in json response with status 500.
+    return apiResponse.ErrorResponse(res, err)
+  }
+}

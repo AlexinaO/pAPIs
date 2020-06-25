@@ -103,55 +103,57 @@ exports.bookStore = [
  */
 exports.bookUpdate = [
   auth,
-  body('title', 'Title must not be empty.').isLength({ min: 1 }).trim(),
-  body('description', 'Description must not be empty.').isLength({ min: 1 }).trim(),
-  body('isbn', 'ISBN must not be empty').isLength({ min: 1 }).trim().custom((value, { req }) => Book.findOne({ isbn: value, user: req.user._id, _id: { $ne: req.params.id } }).then((book) => {
-    if (book) {
-      return Promise.reject('Book already exist with this ISBN no.')
-    }
-  })),
-  body('*').escape(),
-  (req, res) => {
-    try {
-      const errors = validationResult(req)
-      const book = new Book({
-        title: req.body.title,
-        description: req.body.description,
-        isbn: req.body.isbn,
-        author: req.body.author,
-        year: req.body.year,
-        _id: req.params.id,
-      })
-
-      if (!errors.isEmpty()) {
-        return apiResponse.validationErrorWithData(res, 'Validation Error.', errors.array())
-      }
-      if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-        return apiResponse.validationErrorWithData(res, 'Invalid Error.', 'Invalid ID')
-      }
-      Book.findById(req.params.id, (err, foundBook) => {
-        if (foundBook === null) {
-          return apiResponse.notFoundResponse(res, 'Book not exists with this id')
-        }
-        // Check authorized user
-        if (foundBook.user.toString() !== req.user._id) {
-          return apiResponse.unauthorizedResponse(res, 'You are not authorized to do this operation.')
-        }
-        // update book.
-        Book.findByIdAndUpdate(req.params.id, book, {}, (e) => {
-          if (e) {
-            return apiResponse.ErrorResponse(res, e)
-          }
-          const bookData = new BookData(book)
-          return apiResponse.successResponseWithData(res, 'Book update Success.', bookData)
-        })
-      })
-    } catch (err) {
-      // throw error in json response with status 500.
-      return apiResponse.ErrorResponse(res, err)
-    }
-  },
+  (req, res) => { controller.Update(req, res, Book, 'isbn') },
 ]
+//   body('title', 'Title must not be empty.').isLength({ min: 1 }).trim(),
+//   body('description', 'Description must not be empty.').isLength({ min: 1 }).trim(),
+//   body('isbn', 'ISBN must not be empty').isLength({ min: 1 }).trim().custom((value, { req }) => Book.findOne({ isbn: value, user: req.user._id, _id: { $ne: req.params.id } }).then((book) => {
+//     if (book) {
+//       return Promise.reject('Book already exist with this ISBN no.')
+//     }
+//   })),
+//   body('*').escape(),
+//   (req, res) => {
+//     try {
+//       const errors = validationResult(req)
+//       const book = new Book({
+//         title: req.body.title,
+//         description: req.body.description,
+//         isbn: req.body.isbn,
+//         author: req.body.author,
+//         year: req.body.year,
+//         _id: req.params.id,
+//       })
+
+//       if (!errors.isEmpty()) {
+//         return apiResponse.validationErrorWithData(res, 'Validation Error.', errors.array())
+//       }
+//       if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+//         return apiResponse.validationErrorWithData(res, 'Invalid Error.', 'Invalid ID')
+//       }
+//       Book.findById(req.params.id, (err, foundBook) => {
+//         if (foundBook === null) {
+//           return apiResponse.notFoundResponse(res, 'Book not exists with this id')
+//         }
+//         // Check authorized user
+//         if (foundBook.user.toString() !== req.user._id) {
+//           return apiResponse.unauthorizedResponse(res, 'You are not authorized to do this operation.')
+//         }
+//         // update book.
+//         Book.findByIdAndUpdate(req.params.id, book, {}, (e) => {
+//           if (e) {
+//             return apiResponse.ErrorResponse(res, e)
+//           }
+//           const bookData = new BookData(book)
+//           return apiResponse.successResponseWithData(res, 'Book update Success.', bookData)
+//         })
+//       })
+//     } catch (err) {
+//       // throw error in json response with status 500.
+//       return apiResponse.ErrorResponse(res, err)
+//     }
+//   },
+// ]
 
 /**
  * Book Delete.
