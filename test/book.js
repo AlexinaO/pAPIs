@@ -147,7 +147,6 @@ describe('Book', () => {
         .end((err, res) => {
           res.should.have.status(206)
           res.body.should.have.property('message').eql('Operation success')
-          console.log('body', res.body)
           res.body.data.length.should.eql(6)
           expect(res).to.have.header('X-Total-Count', 21)
           expect(res).to.have.header('Link', '/all?page=3')
