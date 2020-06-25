@@ -1,4 +1,4 @@
-// require("dotenv").config();
+require('dotenv').config()
 
 // During the automated test the env variable, We will set it to "test"
 process.env.NODE_ENV = 'test'
