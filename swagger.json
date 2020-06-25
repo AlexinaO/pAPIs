@@ -5,18 +5,18 @@
     "version" : "1.0.0",
     "title" : "pAPIs server"
   },
-  "host" : "virtserver.swaggerhub.com",
-  "basePath" : "/jennifergullung/pAPIsv2/1.0.0",
+  "host" : "https://lespapis.herokuapp.com/",
+  "basePath" : "api/",
   "tags" : [ {
     "name" : "book",
     "description" : "Books"
   }, {
-    "name" : "user",
-    "description" : "User"
+    "name" : "auth",
+    "description" : "Auth"
   } ],
   "schemes" : [ "https", "http" ],
   "paths" : {
-    "/api/book" : {
+    "/book" : {
       "post" : {
         "tags" : [ "book" ],
         "summary" : "Add a new book to the store",
@@ -72,7 +72,7 @@
         } ]
       }
     },
-    "/api/book/{id}" : {
+    "/book/{id}" : {
       "get" : {
         "tags" : [ "book" ],
         "summary" : "Find book by ID",
@@ -134,7 +134,7 @@
         } ]
       }
     },
-    "/api/book/all" : {
+    "/book/all" : {
       "get" : {
         "tags" : [ "book" ],
         "summary" : "Find all books with pagination",
@@ -189,82 +189,9 @@
         } ]
       }
     },
-    "/user" : {
+    "/auth/login" : {
       "post" : {
-        "tags" : [ "user" ],
-        "summary" : "Create user",
-        "description" : "This can only be done by the logged in user.",
-        "operationId" : "createUser",
-        "produces" : [ "application/json", "application/xml" ],
-        "parameters" : [ {
-          "in" : "body",
-          "name" : "body",
-          "description" : "Created user object",
-          "required" : true,
-          "schema" : {
-            "$ref" : "#/definitions/User"
-          }
-        } ],
-        "responses" : {
-          "default" : {
-            "description" : "successful operation"
-          }
-        }
-      }
-    },
-    "/user/createWithArray" : {
-      "post" : {
-        "tags" : [ "user" ],
-        "summary" : "Creates list of users with given input array",
-        "operationId" : "createUsersWithArrayInput",
-        "produces" : [ "application/json", "application/xml" ],
-        "parameters" : [ {
-          "in" : "body",
-          "name" : "body",
-          "description" : "List of user object",
-          "required" : true,
-          "schema" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/definitions/User"
-            }
-          }
-        } ],
-        "responses" : {
-          "default" : {
-            "description" : "successful operation"
-          }
-        }
-      }
-    },
-    "/user/createWithList" : {
-      "post" : {
-        "tags" : [ "user" ],
-        "summary" : "Creates list of users with given input array",
-        "operationId" : "createUsersWithListInput",
-        "produces" : [ "application/json", "application/xml" ],
-        "parameters" : [ {
-          "in" : "body",
-          "name" : "body",
-          "description" : "List of user object",
-          "required" : true,
-          "schema" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "#/definitions/User"
-            }
-          }
-        } ],
-        "responses" : {
-          "default" : {
-            "description" : "successful operation"
-          }
-        }
-      }
-    },
-    "/user/login" : {
-      "get" : {
-        "tags" : [ "user" ],
+        "tags" : [ "auth" ],
         "summary" : "Logs user into the system",
         "operationId" : "loginUser",
         "produces" : [ "application/json", "application/xml" ],
@@ -306,9 +233,9 @@
         }
       }
     },
-    "/user/logout" : {
-      "get" : {
-        "tags" : [ "user" ],
+    "/auth/logout" : {
+      "post" : {
+        "tags" : [ "auth" ],
         "summary" : "Logs out current logged in user session",
         "operationId" : "logoutUser",
         "produces" : [ "application/json", "application/xml" ],
@@ -320,83 +247,30 @@
         }
       }
     },
-    "/user/{username}" : {
-      "get" : {
-        "tags" : [ "user" ],
-        "summary" : "Get user by user name",
-        "operationId" : "getUserByName",
+    "/auth/verify-otp" : {
+      "post" : {
+        "tags" : [ "auth" ],
+        "summary" : "verify-otp",
+        "operationId" : "verify-otp",
         "produces" : [ "application/json", "application/xml" ],
-        "parameters" : [ {
-          "name" : "username",
-          "in" : "path",
-          "description" : "The name that needs to be fetched. Use user1 for testing.",
-          "required" : true,
-          "type" : "string"
-        } ],
+        "parameters" : [ ],
         "responses" : {
-          "200" : {
-            "description" : "successful operation",
-            "schema" : {
-              "$ref" : "#/definitions/User"
-            }
-          },
-          "400" : {
-            "description" : "Invalid username supplied"
-          },
-          "404" : {
-            "description" : "User not found"
+          "default" : {
+            "description" : "successful operation"
           }
         }
-      },
-      "put" : {
-        "tags" : [ "user" ],
-        "summary" : "Updated user",
-        "description" : "This can only be done by the logged in user.",
-        "operationId" : "updateUser",
+      }
+    },
+    "/auth/resend-verify-otp" : {
+      "post" : {
+        "tags" : [ "auth" ],
+        "summary" : "resend verify-otp",
+        "operationId" : "verify-otp",
         "produces" : [ "application/json", "application/xml" ],
-        "parameters" : [ {
-          "name" : "username",
-          "in" : "path",
-          "description" : "name that need to be updated",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "in" : "body",
-          "name" : "body",
-          "description" : "Updated user object",
-          "required" : true,
-          "schema" : {
-            "$ref" : "#/definitions/User"
-          }
-        } ],
+        "parameters" : [ ],
         "responses" : {
-          "400" : {
-            "description" : "Invalid user supplied"
-          },
-          "404" : {
-            "description" : "User not found"
-          }
-        }
-      },
-      "delete" : {
-        "tags" : [ "user" ],
-        "summary" : "Delete user",
-        "description" : "This can only be done by the logged in user.",
-        "operationId" : "deleteUser",
-        "produces" : [ "application/json", "application/xml" ],
-        "parameters" : [ {
-          "name" : "username",
-          "in" : "path",
-          "description" : "The name that needs to be deleted",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "400" : {
-            "description" : "Invalid username supplied"
-          },
-          "404" : {
-            "description" : "User not found"
+          "default" : {
+            "description" : "successful operation"
           }
         }
       }
