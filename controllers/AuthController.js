@@ -4,9 +4,6 @@ const jwt = require('jsonwebtoken')
 const UserModel = require('../models/UserModel')
 // helper file to prepare responses.
 const apiResponse = require('../helpers/apiResponse')
-const utility = require('../helpers/utility')
-const mailer = require('../helpers/mailer')
-const { constants } = require('../helpers/constants')
 
 /**
  * User registration.
@@ -48,37 +45,25 @@ exports.register = [
       }
       // hash input password
       bcrypt.hash(req.body.password, 10, (err, hash) => {
-        // generate OTP for confirmation
-        const otp = utility.randomNumber(4)
         // Create User object with escaped and trimmed data
         const user = new UserModel({
           firstName: req.body.firstName,
           lastName: req.body.lastName,
           email: req.body.email,
           password: hash,
-          confirmOTP: otp,
         })
-        // Html email body
-        const html = `<p>Please Confirm your Account.</p><p>OTP: ${otp}</p>`
-        // Send confirmation email
-        mailer.send(
-          constants.confirmEmails.from,
-          req.body.email,
-          'Confirm Account',
-          html
-        ).then(() => {
-          // Save user.
-          user.save((e) => {
-            if (e) { return apiResponse.ErrorResponse(res, e) }
-            const userData = {
-              _id: user._id,
-              firstName: user.firstName,
-              lastName: user.lastName,
-              email: user.email,
-            }
-            return apiResponse.successResponseWithData(res, 'Registration Success.', userData)
-          })
-        }).catch((e) => apiResponse.ErrorResponse(res, e))
+
+        // Save user.
+        user.save((e) => {
+          if (e) { return apiResponse.ErrorResponse(res, e) }
+          const userData = {
+            _id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+          }
+          return apiResponse.successResponseWithData(res, 'Registration Success.', userData)
+        })
       })
     } catch (err) {
       // throw error in json response with status 500.

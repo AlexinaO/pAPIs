@@ -7,6 +7,18 @@ Run tests :
 docker-compose up --exit-code-from web
 ```
 
+Or :
+```bash
+npm install
+
+npm test
+```
+
+Run :
+```bash
+npm start
+```
+
 ### Setting up environments
 
 1.  You will find a file named `.env.example` on root directory of project.
@@ -17,6 +29,20 @@ docker-compose up --exit-code-from web
 3.  The file `.env` is already ignored, so you never commit your credentials.
 4.  Change the values of the file to your environment. Helpful comments added to `.env.example` file to understand the constants.
 
+5. **Required env variables:**  
+
+    `MONGODB_URL` will be your MongoDB connection string.
+
+    `JWT_SECRET` will be your secret for jwt authentication.
+
+    `JWT_TIMEOUT_DURATION` will be the timeout for jwt validity.
+
+```json
+MONGODB_URL=mongodb://127.0.0.1:27017/papisweb
+JWT_SECRET=aStrongSecret
+JWT_TIMEOUT_DURATION="2 hours"
+```
+
 ## Project  structure
 ```sh
 .
@@ -26,25 +52,27 @@ docker-compose up --exit-code-from web
 │   └── www
 ├── controllers
 │   ├── AuthController.js
-│   └── BookController.js
+│   ├── BookController.js
+│   └── MovieController.js
 ├── models
 │   ├── BookModel.js
+│   ├── MovieModel.js
 │   └── UserModel.js
 ├── routes
 │   ├── api.js
 │   ├── auth.js
-│   └── book.js
+│   ├── book.js
+│   └── movie.js
 ├── middlewares
 │   ├── jwt.js
 ├── helpers
 │   ├── apiResponse.js
-│   ├── constants.js
-│   ├── mailer.js
-│   └── utility.js
+│   └── controller.js
 ├── test
 │   ├── testConfig.js
 │   ├── auth.js
-│   └── book.js
+│   ├── book.js
+│   └── movie.js
 └── public
     ├── index.html
     └── stylesheets
@@ -66,7 +94,6 @@ App is running ...
 
 Press CTRL + C to stop the process.
 ```
-**Note:**  `YOUR_DB_CONNECTION_STRING` will be your MongoDB connection string.
 
 ## License
 

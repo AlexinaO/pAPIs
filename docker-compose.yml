@@ -10,8 +10,6 @@ services:
       - '3000:3000'
     environment: 
         JWT_SECRET: "${JWT_SECRET}"
-        EMAIL_SMTP_USERNAME: "${EMAIL_SMTP_USERNAME}"
-        EMAIL_SMTP_PASSWORD: "${EMAIL_SMTP_PASSWORD}"
     depends_on:
       - mongo
 

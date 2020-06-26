@@ -1,8 +1,6 @@
 const mongoose = require('mongoose')
 const apiResponse = require('./apiResponse')
 
-mongoose.set('useFindAndModify', false)
-
 /**
  *
  * @param {*} req Express request object
