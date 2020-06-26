@@ -25,8 +25,8 @@ describe('Movie', () => {
 
   // Prepare data for testing
   const userTestData = {
-    password: 'Test@123',
-    email: 'maitraysuthar@test12345.com',
+    password: 'password',
+    email: 'toto@mail.com',
   }
 
   // Prepare data for testing
