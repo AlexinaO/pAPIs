@@ -65,10 +65,7 @@ JWT_TIMEOUT_DURATION="2 hours"
 │   └── movie.js
 ├── middlewares
 │   ├── jwt.js
-├── helpers
-│   ├── apiResponse.js
-│   └── controller.js
-├── test
+├── contracts-tests
 │   ├── testConfig.js
 │   ├── auth.js
 │   ├── book.js
