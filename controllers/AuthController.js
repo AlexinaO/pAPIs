@@ -1,9 +1,9 @@
 const { body, validationResult } = require('express-validator')
+const { apiResponse } = require('papis-controller')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const UserModel = require('../models/UserModel')
 // helper file to prepare responses.
-const apiResponse = require('../helpers/apiResponse')
 
 /**
  * User registration.

@@ -24,6 +24,7 @@
     "mongoose": "^5.7.6",
     "mongoose-paginate": "git://github.com/zerok78/mongoose-paginate.git#version-5.0.4",
     "morgan": "^1.10.0",
+    "papis-controller": "0.0.2",
     "swagger-ui-express": "^4.1.4"
   },
   "devDependencies": {

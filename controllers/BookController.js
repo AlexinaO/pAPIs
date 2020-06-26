@@ -1,8 +1,7 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
+const { controller, apiResponse } = require('papis-controller')
 const Book = require('../models/BookModel')
 const auth = require('../middlewares/jwt')
-const controller = require('../helpers/controller')
-const apiResponse = require('../helpers/apiResponse')
 
 /**
  * Book List.

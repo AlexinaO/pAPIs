@@ -7,10 +7,10 @@ const mongoose = require('mongoose')
 const logger = require('debug')('web')
 const swaggerUi = require('swagger-ui-express')
 const morgan = require('morgan')
+const { apiResponse } = require('papis-controller')
 const swaggerDocument = require('./swagger.json')
 const indexRouter = require('./routes/index')
 const apiRouter = require('./routes/api')
-const apiResponse = require('./helpers/apiResponse')
 
 // DB connection
 const { MONGODB_URL } = process.env
