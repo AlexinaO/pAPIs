@@ -5,7 +5,7 @@
     "version" : "1.0.0",
     "title" : "pAPIs server"
   },
-  "host" : "https://lespapis.herokuapp.com/",
+  "host" : "localhost:3000/",
   "basePath" : "api/",
   "tags" : [ {
     "name" : "book",
@@ -14,7 +14,7 @@
     "name" : "auth",
     "description" : "Auth"
   } ],
-  "schemes" : [ "https", "http" ],
+  "schemes" : [ "http" ],
   "paths" : {
     "/book" : {
       "post" : {
@@ -195,19 +195,23 @@
         "summary" : "Logs user into the system",
         "operationId" : "login",
         "produces" : [ "application/json", "application/xml" ],
-        "parameters" : [ {
-          "name" : "email",
-          "in" : "query",
-          "description" : "The email for login",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "name" : "password",
-          "in" : "query",
-          "description" : "The password for login in clear text",
-          "required" : true,
-          "type" : "string"
-        } ],
+        "requestBody": {
+          "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties" : {
+                "email" : {
+                  "type" : "string"
+                },
+                "password" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      },
         "responses" : {
           "200" : {
             "description" : "successful operation",
@@ -217,20 +221,6 @@
           },
           "400" : {
             "description" : "Invalid email/password supplied"
-          }
-        }
-      }
-    },
-    "/auth/logout" : {
-      "post" : {
-        "tags" : [ "auth" ],
-        "summary" : "Logs out current logged in user session",
-        "operationId" : "logoutUser",
-        "produces" : [ "application/json", "application/xml" ],
-        "parameters" : [ ],
-        "responses" : {
-          "default" : {
-            "description" : "successful operation"
           }
         }
       }
@@ -263,58 +253,12 @@
           } 
         }
       }
-    },
-    "/auth/verify-otp" : {
-      "post" : {
-        "tags" : [ "auth" ],
-        "summary" : "verify-otp",
-        "operationId" : "verifyConfirm",
-        "produces" : [ "application/json", "application/xml" ],
-        "parameters" : [ {
-          "name" : "email",
-          "in" : "query",
-          "description" : "The email for confirmation",
-          "required" : true,
-          "type" : "string"
-        }, {
-          "name" : "otp",
-          "in" : "query",
-          "description" : "one time password",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "default" : {
-            "description" : "successful operation"
-          }
-        }
-      }
-    },
-    "/auth/resend-verify-otp" : {
-      "post" : {
-        "tags" : [ "auth" ],
-        "summary" : "resend verify-otp",
-        "operationId" : "resendConfirmOtp",
-        "produces" : [ "application/json", "application/xml" ],
-        "parameters" : [ {
-          "name" : "email",
-          "in" : "query",
-          "description" : "The email for confirmation",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "default" : {
-            "description" : "successful operation"
-          }
-        }
-      }
     }
   },
   "securityDefinitions" : {
     "bookstore_auth" : {
       "type" : "oauth2",
-      "authorizationUrl" : "http://bookstore.swagger.io/oauth/dialog",
+      "authorizationUrl" : "https://localhost:3000/api/auth/login",
       "flow" : "implicit",
       "scopes" : {
         "write:books" : "modify books in your account",
@@ -359,13 +303,6 @@
     "User" : {
       "type" : "object",
       "properties" : {
-        "id" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
-        "username" : {
-          "type" : "string"
-        },
         "firstName" : {
           "type" : "string"
         },
@@ -377,14 +314,6 @@
         },
         "password" : {
           "type" : "string"
-        },
-        "phone" : {
-          "type" : "string"
-        },
-        "userStatus" : {
-          "type" : "integer",
-          "format" : "int32",
-          "description" : "User Status"
         }
       },
       "xml" : {
@@ -393,3 +322,4 @@
     }
   }
 }
+  
