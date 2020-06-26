@@ -2,7 +2,6 @@ const { controller } = require('papis-controller')
 const Movie = require('../models/MovieModel')
 const auth = require('../middlewares/jwt')
 
-
 /**
  * Movie List.
  */

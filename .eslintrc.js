@@ -23,5 +23,6 @@ module.exports = {
     'no-tabs': ['off'],
     'quote-props': ['warn'],
     radix: ['off'],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
   },
 }
